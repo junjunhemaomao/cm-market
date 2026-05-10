@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ComicMaster 素材市场 — 高品质漫画素材包</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="header-logo">
+      <span class="header-logo-icon">CM</span>
+      ComicMaster 素材市场
+    </a>
+    <nav>
+      <a href="/" class="current">首页</a>
+      <a href="/packs.html">素材包</a>
+      <a href="/about.html">关于</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <h1>ComicMaster 官方素材市场</h1>
+    <p>高品质漫画素材包，标准化标签，到手即用。下载后解压到素材目录，标签自动匹配。</p>
+    <a class="btn btn-lg" href="/packs.html">浏览全部素材包</a>
+  </section>
+
+  <section class="features">
+    <div class="feature">
+      <div class="feature-icon tags">🏷️</div>
+      <strong>标准化标签体系</strong>
+      <p>与 ComicMaster 标签一致，解压即命中，无需手动标注</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon format">🖼️</div>
+      <strong>PNG 透明背景</strong>
+      <p>2000px+ 分辨率，可直接用于分镜格，支持透明叠加</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon update">🔄</div>
+      <strong>持续更新</strong>
+      <p>素材包随版本迭代，购买后免费获取内容更新</p>
+    </div>
+  </section>
+
+  <h2 class="section-title">精选素材包 <span class="count" id="featured-count"></span></h2>
+  <div class="pack-grid" id="featured-packs"></div>
+
+  <h2 class="section-title">如何使用</h2>
+  <div class="usage-steps">
+    <div class="usage-step">
+      <div class="step-num">1</div>
+      <strong>选择素材包</strong>
+      <p>浏览市场，找到需要的素材包</p>
+    </div>
+    <div class="usage-step">
+      <div class="step-num">2</div>
+      <strong>完成购买</strong>
+      <p>微信 / 支付宝扫码支付，安全便捷</p>
+    </div>
+    <div class="usage-step">
+      <div class="step-num">3</div>
+      <strong>下载解压</strong>
+      <p>下载 zip 文件，解压到 <code>input/words/</code></p>
+    </div>
+    <div class="usage-step">
+      <div class="step-num">4</div>
+      <strong>即刻使用</strong>
+      <p>刷新 ComicMaster 标签索引，标签自动匹配</p>
+    </div>
+  </div>
+
+</main>
+
+<footer>ComicMaster 素材市场 · 独立运营</footer>
+
+<script src="packs.js"></script>
+<script>
+(function () {
+  const featured = packs.filter(function (p) { return p.is_featured && p.is_active; });
+  document.getElementById('featured-count').textContent = '(' + featured.length + ' 个)';
+
+  if (!featured.length) {
+    document.getElementById('featured-packs').innerHTML = '<div class="empty-state"><p>暂无精选素材包</p></div>';
+    return;
+  }
+
+  var html = '';
+  featured.forEach(function (pack) {
+    var catClass = '';
+    switch (pack.category) {
+      case '分镜模板': catClass = 'cat-framing'; break;
+      case '角色': catClass = 'cat-character'; break;
+      case '场景': catClass = 'cat-scene'; break;
+      case '特效': catClass = 'cat-effect'; break;
+      default: catClass = 'cat-prop';
+    }
+
+    var badge = '';
+    if (pack.price === 0) badge = '<span class="pack-card-badge badge-free">免费</span>';
+
+    var priceStr = pack.price === 0
+      ? '<span class="pack-card-price free">免费</span>'
+      : '<span class="pack-card-price">¥' + (pack.price / 100).toFixed(1) + '</span>';
+
+    html += '<div class="pack-card">' +
+      '<div class="pack-card-image-wrap">' +
+        '<img src="' + pack.cover_url + '" alt="' + pack.name + '" loading="lazy">' +
+        badge +
+      '</div>' +
+      '<div class="pack-card-body">' +
+        '<span class="cat-badge ' + catClass + '">' + pack.category + '</span>' +
+        '<h3><a href="pack.html?slug=' + pack.slug + '">' + pack.name + '</a></h3>' +
+        '<p class="pack-card-desc">' + pack.description.split('\n')[0] + '</p>' +
+        '<div class="pack-card-meta">' +
+          '<span>' + pack.tags.length + ' 个标签</span>' +
+          '<span>' + pack.file_size + '</span>' +
+          '<span>' + pack.file_count + ' 张图</span>' +
+        '</div>' +
+        '<div class="pack-card-bottom">' +
+          priceStr +
+          '<a class="btn btn-sm" href="pack.html?slug=' + pack.slug + '">查看详情</a>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  });
+  document.getElementById('featured-packs').innerHTML = html;
+})();
+</script>
+
+</body>
+</html>

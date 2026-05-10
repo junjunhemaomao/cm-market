@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>下载素材包 — ComicMaster 素材市场</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="header-logo">
+      <span class="header-logo-icon">CM</span>
+      ComicMaster 素材市场
+    </a>
+    <nav>
+      <a href="/">首页</a>
+      <a href="/packs.html">素材包</a>
+      <a href="/about.html">关于</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <div class="download-card">
+    <h2>下载素材包</h2>
+    <p style="color:var(--c-text-dim);font-size:14px;margin-bottom:24px;line-height:1.6">
+      免费素材包可直接下载<br>付费素材包请在第三方平台购买后获取下载码
+    </p>
+    <input class="download-input" id="code-input" type="text" placeholder="输入下载码" maxlength="64" autocomplete="off">
+    <p class="download-error" id="error-msg">下载码无效或已过期</p>
+    <button class="btn" style="margin-top:14px;width:100%;justify-content:center" id="verify-btn">验证并下载</button>
+
+    <div class="download-success" id="success-box">
+      <p style="color:var(--c-free);font-weight:700;font-size:16px;margin-bottom:12px">✓ 验证成功</p>
+      <p style="color:var(--c-text-dim);font-size:14px;margin-bottom:20px" id="success-pack-name"></p>
+      <a class="btn btn-lg" id="download-link" href="#" style="width:100%;justify-content:center">下载素材包</a>
+      <p style="font-size:12px;color:var(--c-text-muted);margin-top:20px;line-height:1.6">
+        下载后解压到 ComicMaster 的<br>
+        <code style="background:#f3f4f6;padding:2px 8px;border-radius:4px;font-size:13px">input/words/</code>
+        目录，刷新标签索引即可使用
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<footer>ComicMaster 素材市场 · 独立运营</footer>
+
+<script src="packs.js"></script>
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var codeFromUrl = params.get('code');
+  var input = document.getElementById('code-input');
+  var errorMsg = document.getElementById('error-msg');
+  var successBox = document.getElementById('success-box');
+  var verifyBtn = document.getElementById('verify-btn');
+  var successPackName = document.getElementById('success-pack-name');
+  var downloadLink = document.getElementById('download-link');
+
+  if (codeFromUrl) {
+    input.value = codeFromUrl;
+    verifyCode();
+  }
+
+  verifyBtn.addEventListener('click', verifyCode);
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') verifyCode();
+  });
+
+  function verifyCode() {
+    var code = input.value.trim();
+    errorMsg.classList.remove('show');
+    successBox.classList.remove('show');
+    verifyBtn.style.display = '';
+
+    if (!code) {
+      errorMsg.textContent = '请输入下载码';
+      errorMsg.classList.add('show');
+      return;
+    }
+
+    // free packs: FREE-{slug}
+    if (code.startsWith('FREE-')) {
+      var slug = code.replace('FREE-', '');
+      var pack = packs.find(function (p) { return p.slug === slug && p.price === 0; });
+      if (pack) { showSuccess(pack); return; }
+      errorMsg.textContent = '下载码无效（免费包不存在）';
+      errorMsg.classList.add('show');
+      return;
+    }
+
+    // demo codes: DEMO-{slug}
+    if (code.startsWith('DEMO-')) {
+      var slug = code.replace('DEMO-', '');
+      var pack = packs.find(function (p) { return p.slug === slug; });
+      if (pack) { showSuccess(pack); return; }
+    }
+
+    // 面包多 codes: MBD-* (replace with real validation)
+    if (code.startsWith('MBD-') && code.length >= 12) {
+      showSuccess({ name: '已购买的素材包', slug: 'purchased', file_size: '', file_path: '#' });
+      return;
+    }
+
+    errorMsg.textContent = '下载码无效，请检查后重试';
+    errorMsg.classList.add('show');
+  }
+
+  function showSuccess(pack) {
+    successPackName.textContent = pack.name;
+    downloadLink.href = pack.file_path || '#';
+    if (pack.file_size) {
+      downloadLink.textContent = '下载 ' + pack.file_size;
+    } else {
+      downloadLink.textContent = '下载素材包';
+    }
+    successBox.classList.add('show');
+    verifyBtn.style.display = 'none';
+  }
+})();
+</script>
+
+</body>
+</html>

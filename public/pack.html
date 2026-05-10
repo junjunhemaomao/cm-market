@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>素材包详情 — ComicMaster 素材市场</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="header-logo">
+      <span class="header-logo-icon">CM</span>
+      ComicMaster 素材市场
+    </a>
+    <nav>
+      <a href="/">首页</a>
+      <a href="/packs.html">素材包</a>
+      <a href="/about.html">关于</a>
+    </nav>
+  </div>
+</header>
+
+<main id="detail-main"></main>
+
+<footer>ComicMaster 素材市场 · 独立运营</footer>
+
+<script src="packs.js"></script>
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var slug = params.get('slug');
+  var pack = packs.find(function (p) { return p.slug === slug; });
+
+  if (!pack || !pack.is_active) {
+    document.getElementById('detail-main').innerHTML =
+      '<div class="empty-state"><p>素材包不存在或已下架</p><a class="btn" href="/packs.html">返回列表</a></div>';
+    document.title = '未找到 — ComicMaster 素材市场';
+    return;
+  }
+
+  document.title = pack.name + ' — ComicMaster 素材市场';
+
+  // category badge
+  var catClass = '';
+  switch (pack.category) {
+    case '分镜模板': catClass = 'cat-framing'; break;
+    case '角色': catClass = 'cat-character'; break;
+    case '场景': catClass = 'cat-scene'; break;
+    case '特效': catClass = 'cat-effect'; break;
+    default: catClass = 'cat-prop';
+  }
+
+  // tags: show first 10, fold rest
+  var showTags = pack.tags.slice(0, 10);
+  var hiddenTags = pack.tags.slice(10);
+  var tagsHtml = showTags.map(function (t) { return '<span class="tag">' + t + '</span>'; }).join('');
+  if (hiddenTags.length > 0) {
+    tagsHtml += '<button class="tag-toggle" id="tag-toggle" onclick="this.style.display=\'none\';var el=document.querySelectorAll(\'.tag-hidden\');el.forEach(function(e){e.style.display=\'inline-block\'});">+ ' + hiddenTags.length + ' 个</button>';
+    tagsHtml += hiddenTags.map(function (t) { return '<span class="tag tag-hidden" style="display:none">' + t + '</span>'; }).join('');
+  }
+
+  // price
+  var priceClass = pack.price === 0 ? 'detail-price-lg free' : 'detail-price-lg';
+  var priceText = pack.price === 0 ? '免费' : '¥' + (pack.price / 100).toFixed(1);
+
+  // action button
+  var actionHtml;
+  if (pack.price === 0) {
+    actionHtml = '<a class="btn btn-lg btn-free" href="download.html?code=FREE-' + pack.slug + '">免费下载</a>';
+  } else if (pack.pay_link) {
+    actionHtml = '<a class="btn btn-lg" href="' + pack.pay_link + '" target="_blank" rel="noopener">在第三方平台购买 ¥' + (pack.price / 100).toFixed(1) + '</a>' +
+      '<p class="detail-payment-hint">跳转至第三方平台完成支付（支持微信 / 支付宝）<br>本站不处理任何支付，交易由第三方平台担保</p>';
+  } else {
+    actionHtml = '<button class="btn btn-lg btn-disabled" disabled>暂未上架</button>';
+  }
+
+  // previews
+  var previewsHtml = '';
+  if (pack.previews && pack.previews.length > 0) {
+    previewsHtml = '<div class="preview-section"><h2>内容预览（' + pack.previews.length + ' 张）</h2><div class="preview-grid">' +
+      pack.previews.map(function (url, i) {
+        return '<img src="' + url + '" alt="预览 ' + (i + 1) + '" loading="lazy" onclick="openLightbox(\'' + url + '\')">';
+      }).join('') +
+      '</div></div>';
+  }
+
+  // simple markdown-ish description
+  var descHtml = pack.description
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/### (.+)/g, '<h3>$1</h3>')
+    .replace(/- (.+)/g, '<li>$1</li>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/(<li>[\s\S]*?<\/li>)/, '<ul>$1</ul>')
+    .replace(/<\/li>\s*<li>/g, '</li><li>');
+
+  document.getElementById('detail-main').innerHTML =
+    '<div class="detail-grid">' +
+      '<div>' +
+        '<img class="detail-cover" src="' + pack.cover_url + '" alt="' + pack.name + '">' +
+        previewsHtml +
+      '</div>' +
+      '<div class="detail-info">' +
+        '<span class="cat-badge ' + catClass + ' detail-category">' + pack.category + '</span>' +
+        '<h1>' + pack.name + '</h1>' +
+        '<p class="' + priceClass + '">' + priceText + '</p>' +
+        '<div class="detail-meta-row">' +
+          '<span>📁 ' + pack.file_size + '</span>' +
+          '<span>🖼 ' + pack.file_count + ' 张图</span>' +
+          '<span>📐 ' + pack.resolution + '</span>' +
+        '</div>' +
+        '<div class="detail-desc">' + descHtml + '</div>' +
+        '<div class="detail-tags">' + tagsHtml + '</div>' +
+        '<div class="detail-actions">' + actionHtml + '</div>' +
+      '</div>' +
+    '</div>';
+
+  // lightbox
+  var lb = document.createElement('div');
+  lb.className = 'lightbox';
+  lb.id = 'lightbox';
+  lb.onclick = function () { lb.classList.remove('open'); };
+  lb.innerHTML = '<img id="lightbox-img" src="">';
+  document.body.appendChild(lb);
+})();
+
+function openLightbox(url) {
+  document.getElementById('lightbox-img').src = url;
+  document.getElementById('lightbox').classList.add('open');
+}
+</script>
+
+</body>
+</html>

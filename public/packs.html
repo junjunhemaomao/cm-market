@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>素材包列表 — ComicMaster 素材市场</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="header-logo">
+      <span class="header-logo-icon">CM</span>
+      ComicMaster 素材市场
+    </a>
+    <nav>
+      <a href="/">首页</a>
+      <a href="/packs.html" class="current">素材包</a>
+      <a href="/about.html">关于</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px">
+    <h2 style="font-size:24px;font-weight:700">全部素材包</h2>
+    <span style="font-size:14px;color:var(--c-text-muted)" id="pack-count"></span>
+  </div>
+
+  <div class="search-bar">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search-input" placeholder="搜索素材包名称、标签..." autocomplete="off">
+  </div>
+
+  <div class="filter-bar">
+    <span class="filter-label">分类</span>
+    <div class="filter-pills" id="category-pills">
+      <button class="pill active" data-cat="all">全部</button>
+      <button class="pill" data-cat="分镜模板">分镜模板</button>
+      <button class="pill" data-cat="角色">角色</button>
+      <button class="pill" data-cat="场景">场景</button>
+      <button class="pill" data-cat="特效">特效</button>
+    </div>
+    <div class="filter-spacer"></div>
+    <span class="filter-label">排序</span>
+    <div class="filter-pills" id="sort-pills">
+      <button class="pill active" data-sort="newest">最新</button>
+      <button class="pill" data-sort="price-asc">价格 ↑</button>
+      <button class="pill" data-sort="price-desc">价格 ↓</button>
+    </div>
+  </div>
+
+  <div class="pack-grid" id="pack-list"></div>
+
+</main>
+
+<footer>ComicMaster 素材市场 · 独立运营</footer>
+
+<script src="packs.js"></script>
+<script>
+(function () {
+  var currentCat = 'all';
+  var currentSort = 'newest';
+  var currentSearch = '';
+
+  function getCatClass(cat) {
+    switch (cat) {
+      case '分镜模板': return 'cat-framing';
+      case '角色': return 'cat-character';
+      case '场景': return 'cat-scene';
+      case '特效': return 'cat-effect';
+      default: return 'cat-prop';
+    }
+  }
+
+  function render() {
+    var list = packs.filter(function (p) { return p.is_active; });
+
+    if (currentCat !== 'all') {
+      list = list.filter(function (p) { return p.category === currentCat; });
+    }
+
+    if (currentSearch) {
+      var q = currentSearch.toLowerCase();
+      list = list.filter(function (p) {
+        return p.name.toLowerCase().indexOf(q) !== -1 ||
+               p.tags.some(function (t) { return t.toLowerCase().indexOf(q) !== -1; }) ||
+               p.category.toLowerCase().indexOf(q) !== -1;
+      });
+    }
+
+    if (currentSort === 'newest') {
+      list.sort(function (a, b) { return b.created_at.localeCompare(a.created_at); });
+    } else if (currentSort === 'price-asc') {
+      list.sort(function (a, b) { return a.price - b.price; });
+    } else if (currentSort === 'price-desc') {
+      list.sort(function (a, b) { return b.price - a.price; });
+    }
+
+    document.getElementById('pack-count').textContent = '共 ' + list.length + ' 个素材包';
+
+    if (!list.length) {
+      document.getElementById('pack-list').innerHTML = '<div class="empty-state"><p>没有匹配的素材包</p></div>';
+      return;
+    }
+
+    var html = '';
+    list.forEach(function (pack) {
+      var catClass = getCatClass(pack.category);
+
+      var badge = '';
+      if (pack.price === 0) badge = '<span class="pack-card-badge badge-free">免费</span>';
+      else if (pack.is_featured) badge = '<span class="pack-card-badge badge-hot">热门</span>';
+
+      var priceStr = pack.price === 0
+        ? '<span class="pack-card-price free">免费</span>'
+        : '<span class="pack-card-price">¥' + (pack.price / 100).toFixed(1) + '</span>';
+
+      html += '<div class="pack-card">' +
+        '<div class="pack-card-image-wrap">' +
+          '<img src="' + pack.cover_url + '" alt="' + pack.name + '" loading="lazy">' +
+          badge +
+        '</div>' +
+        '<div class="pack-card-body">' +
+          '<span class="cat-badge ' + catClass + '">' + pack.category + '</span>' +
+          '<h3><a href="pack.html?slug=' + pack.slug + '">' + pack.name + '</a></h3>' +
+          '<p class="pack-card-desc">' + pack.description.split('\n')[0] + '</p>' +
+          '<div class="pack-card-meta">' +
+            '<span>' + pack.tags.length + ' 个标签</span>' +
+            '<span>' + pack.file_size + '</span>' +
+            '<span>' + pack.file_count + ' 张图</span>' +
+          '</div>' +
+          '<div class="pack-card-bottom">' +
+            priceStr +
+            '<a class="btn btn-sm" href="pack.html?slug=' + pack.slug + '">查看详情</a>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    });
+    document.getElementById('pack-list').innerHTML = html;
+  }
+
+  document.getElementById('category-pills').addEventListener('click', function (e) {
+    if (e.target.tagName !== 'BUTTON') return;
+    currentCat = e.target.dataset.cat;
+    document.querySelectorAll('#category-pills .pill').forEach(function (c) { c.classList.remove('active'); });
+    e.target.classList.add('active');
+    render();
+  });
+
+  document.getElementById('sort-pills').addEventListener('click', function (e) {
+    if (e.target.tagName !== 'BUTTON') return;
+    currentSort = e.target.dataset.sort;
+    document.querySelectorAll('#sort-pills .pill').forEach(function (c) { c.classList.remove('active'); });
+    e.target.classList.add('active');
+    render();
+  });
+
+  var searchTimer;
+  document.getElementById('search-input').addEventListener('input', function () {
+    clearTimeout(searchTimer);
+    var self = this;
+    searchTimer = setTimeout(function () {
+      currentSearch = self.value.trim();
+      render();
+    }, 200);
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>
