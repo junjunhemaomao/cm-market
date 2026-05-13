@@ -101,12 +101,8 @@
       default: catClass = 'cat-prop';
     }
 
-    var badge = '';
-    if (pack.price === 0) badge = '<span class="pack-card-badge badge-free">免费</span>';
-
-    var priceStr = pack.price === 0
-      ? '<span class="pack-card-price free">免费</span>'
-      : '<span class="pack-card-price">¥' + (pack.price / 100).toFixed(1) + '</span>';
+    var badge = '<span class="pack-card-badge badge-free">免费</span>';
+    var priceStr = '<span class="pack-card-price free">免费</span>';
 
     html += '<div class="pack-card">' +
       '<div class="pack-card-image-wrap">' +

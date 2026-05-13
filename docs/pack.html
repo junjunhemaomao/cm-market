@@ -61,50 +61,48 @@
     tagsHtml += hiddenTags.map(function (t) { return '<span class="tag tag-hidden" style="display:none">' + t + '</span>'; }).join('');
   }
 
-  // price
-  var priceClass = pack.price === 0 ? 'detail-price-lg free' : 'detail-price-lg';
-  var priceText = pack.price === 0 ? '免费' : '¥' + (pack.price / 100).toFixed(1);
+  // price display
+  var priceText = '免费';
 
-  // action section
-  var actionHtml;
-  if (pack.price === 0) {
-    actionHtml = '<a class="btn btn-lg btn-free" href="download.html?code=FREE-' + pack.slug + '">免费下载</a>';
-  } else {
-    actionHtml =
-      '<div class="payment-section">' +
-        '<p class="payment-price">¥' + (pack.price / 100).toFixed(1) + '</p>' +
-        '<p class="payment-hint">扫码支付，支付后即可获取网盘链接</p>' +
-        '<div class="payment-qrcodes">' +
-          '<div class="payment-qr">' +
-            '<img src="images/qrcode/wechat.png" alt="微信收款码" loading="lazy">' +
-            '<span>微信支付</span>' +
-          '</div>' +
-          '<div class="payment-qr">' +
-            '<img src="images/qrcode/alipay.png" alt="支付宝收款码" loading="lazy">' +
-            '<span>支付宝</span>' +
-          '</div>' +
+  // download section — always visible
+  var downloadHtml = '';
+  if (pack.pan_link) {
+    downloadHtml =
+      '<div class="pan-card">' +
+        '<p class="pan-label">百度网盘下载</p>' +
+        '<div class="pan-row">' +
+          '<span class="pan-link-label">链接</span>' +
+          '<code class="pan-code">' + pack.pan_link + '</code>' +
+          '<button class="btn btn-sm btn-outline" onclick="copyText(\'' + pack.pan_link + '\',this)">复制</button>' +
         '</div>' +
-        '<p class="payment-receipt">支付成功后请截图保存<b>微信/支付宝交易记录</b>，作为购买凭据。<br>如忘记提取码，凭交易记录截图联系客服找回。</p>' +
-      '</div>' +
-      (pack.pan_link ? (
-        '<div class="pan-card">' +
-          '<p class="pan-label">百度网盘下载</p>' +
+        (pack.pan_code ? (
           '<div class="pan-row">' +
-            '<span class="pan-link-label">链接</span>' +
-            '<code class="pan-code">' + pack.pan_link + '</code>' +
-            '<button class="btn btn-sm btn-outline" onclick="copyText(\'' + pack.pan_link + '\',this)">复制</button>' +
-          '</div>' +
-          (pack.pan_code ? (
-            '<div class="pan-row">' +
-              '<span class="pan-link-label">提取码</span>' +
-              '<code class="pan-code pan-code-lg">' + pack.pan_code + '</code>' +
-              '<button class="btn btn-sm btn-outline" onclick="copyText(\'' + pack.pan_code + '\',this)">复制</button>' +
-            '</div>'
-          ) : '') +
-          '<p class="pan-note">支付后即可使用上方链接下载。请妥善保存，或收藏本页随时查看。</p>' +
-        '</div>'
-      ) : '<p class="detail-payment-hint">支付后请联系客服获取下载链接</p>');
+            '<span class="pan-link-label">提取码</span>' +
+            '<code class="pan-code pan-code-lg">' + pack.pan_code + '</code>' +
+            '<button class="btn btn-sm btn-outline" onclick="copyText(\'' + pack.pan_code + '\',this)">复制</button>' +
+          '</div>'
+        ) : '') +
+      '</div>';
   }
+
+  // donation section
+  var donationHtml =
+    '<div class="donation-section">' +
+      '<p class="donation-title">喜欢这个素材包？</p>' +
+      '<p class="donation-hint">扫码打赏，支持创作者持续更新更多素材</p>' +
+      '<div class="payment-qrcodes">' +
+        '<div class="payment-qr">' +
+          '<img src="images/qrcode/wechat.png" alt="微信收款码" loading="lazy">' +
+          '<span>微信打赏</span>' +
+        '</div>' +
+        '<div class="payment-qr">' +
+          '<img src="images/qrcode/alipay.png" alt="支付宝收款码" loading="lazy">' +
+          '<span>支付宝打赏</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  var actionHtml = downloadHtml + donationHtml;
 
   // previews
   var previewsHtml = '';
@@ -134,7 +132,7 @@
       '<div class="detail-info">' +
         '<span class="cat-badge ' + catClass + ' detail-category">' + pack.category + '</span>' +
         '<h1>' + pack.name + '</h1>' +
-        '<p class="' + priceClass + '">' + priceText + '</p>' +
+        '<p class="detail-price-lg free">' + priceText + '</p>' +
         '<div class="detail-meta-row">' +
           '<span>📁 ' + pack.file_size + '</span>' +
           '<span>🖼 ' + pack.file_count + ' 张图</span>' +
