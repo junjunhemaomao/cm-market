@@ -27,7 +27,7 @@
   <div class="download-card">
     <h2>下载素材包</h2>
     <p style="color:var(--c-text-dim);font-size:14px;margin-bottom:24px;line-height:1.6">
-      免费素材包可直接下载<br>付费素材包请在第三方平台购买后获取下载码
+      免费素材包直接下载<br>付费素材包请在详情页扫码支付后获取网盘链接
     </p>
     <input class="download-input" id="code-input" type="text" placeholder="输入下载码" maxlength="64" autocomplete="off">
     <p class="download-error" id="error-msg">下载码无效或已过期</p>
@@ -98,12 +98,6 @@
       var slug = code.replace('DEMO-', '');
       var pack = packs.find(function (p) { return p.slug === slug; });
       if (pack) { showSuccess(pack); return; }
-    }
-
-    // 面包多 codes: MBD-* (replace with real validation)
-    if (code.startsWith('MBD-') && code.length >= 12) {
-      showSuccess({ name: '已购买的素材包', slug: 'purchased', file_size: '', file_path: '#' });
-      return;
     }
 
     errorMsg.textContent = '下载码无效，请检查后重试';
