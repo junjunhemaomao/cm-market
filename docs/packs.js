@@ -1,7 +1,7 @@
 // ============================================================
 // ComicMaster Material Market — Pack Data
-// Edit images in public/images/covers/ and public/images/previews/
-// Replace with real screenshots before deployment.
+// 图片放在 images/<素材包中文名>/ 下，cover.png 为封面，1.png、2.png...为预览图
+// 上线前替换为真实截图。
 // ============================================================
 
 const packs = [
@@ -11,12 +11,12 @@ const packs = [
     name: "分镜基础入门（免费）",
     description: "极简泛化分镜规律入门包，包含基础镜头语言、分格节奏模板和构图参考。适合刚接触 ComicMaster 的用户，快速理解工具价值。\n\n### 包含内容\n- 基础镜头角度参考（特写/中景/远景）\n- 分格节奏模板 12 组\n- 构图引导线 8 组\n- 景别切换示范",
     price: 0,
-    cover_url: "images/covers/framing-basics.png",
+    cover_url: "images/分镜基础入门/cover.png",
     previews: [
-      "images/previews/framing-basics_1.png",
-      "images/previews/framing-basics_2.png",
-      "images/previews/framing-basics_3.png",
-      "images/previews/framing-basics_4.png"
+      "images/分镜基础入门/1.png",
+      "images/分镜基础入门/2.png",
+      "images/分镜基础入门/3.png",
+      "images/分镜基础入门/4.png"
     ],
     tags: ["分镜", "基础", "镜头", "构图", "模板", "入门", "免费"],
     file_count: 32,
@@ -36,13 +36,13 @@ const packs = [
     name: "完整场景分镜结构（轻量版）",
     description: "覆盖常见漫画场景的完整分镜结构数据包，包含条漫和页漫两种节奏模型。适合有一定基础、想提升叙事节奏的创作者。\n\n### 包含内容\n- 日常/战斗/情感场景分镜结构各 20+ 组\n- 条漫纵向节奏模板 15 组\n- 页漫画格布局方案 18 组\n- 转场过渡参考 10 组",
     price: 2990,
-    cover_url: "images/covers/scene-framing.png",
+    cover_url: "images/场景分镜结构/cover.png",
     previews: [
-      "images/previews/scene-framing_1.png",
-      "images/previews/scene-framing_2.png",
-      "images/previews/scene-framing_3.png",
-      "images/previews/scene-framing_4.png",
-      "images/previews/scene-framing_5.png"
+      "images/场景分镜结构/1.png",
+      "images/场景分镜结构/2.png",
+      "images/场景分镜结构/3.png",
+      "images/场景分镜结构/4.png",
+      "images/场景分镜结构/5.png"
     ],
     tags: ["分镜", "场景", "条漫", "页漫", "节奏", "转场", "中级", "叙事"],
     file_count: 78,
@@ -62,14 +62,14 @@ const packs = [
     name: "全维度分镜大数据（专业版）",
     description: "行业级结构化分镜数据库，基于大量漫画作品分析提取。包含齐夫定律分布模型，适用于追求专业水准的创作者和团队。\n\n### 包含内容\n- 全维度镜头大数据（500+ 组分类数据）\n- 齐夫定律分格分布模型\n- 情绪-构图映射表\n- 行业级节奏曲线数据\n- 跨类型对比参考",
     price: 9900,
-    cover_url: "images/covers/pro-framing.png",
+    cover_url: "images/专业分镜数据/cover.png",
     previews: [
-      "images/previews/pro-framing_1.png",
-      "images/previews/pro-framing_2.png",
-      "images/previews/pro-framing_3.png",
-      "images/previews/pro-framing_4.png",
-      "images/previews/pro-framing_5.png",
-      "images/previews/pro-framing_6.png"
+      "images/专业分镜数据/1.png",
+      "images/专业分镜数据/2.png",
+      "images/专业分镜数据/3.png",
+      "images/专业分镜数据/4.png",
+      "images/专业分镜数据/5.png",
+      "images/专业分镜数据/6.png"
     ],
     tags: ["分镜", "专业", "大数据", "齐夫定律", "情绪映射", "节奏", "行业级", "高级"],
     file_count: 520,
@@ -89,12 +89,12 @@ const packs = [
     name: "角色表情视觉词汇包",
     description: "精选漫画角色表情参考素材，覆盖喜怒哀乐等基本情绪及复合情绪表达。每个表情配有标签，解压即用。\n\n### 包含内容\n- 基本情绪 6 类（喜/怒/哀/惧/惊/厌）\n- 复合情绪 12 类\n- 每类 4-6 个变体\n- 全部 PNG 透明背景",
     price: 990,
-    cover_url: "images/covers/expressions.png",
+    cover_url: "images/角色表情包/cover.png",
     previews: [
-      "images/previews/expressions_1.png",
-      "images/previews/expressions_2.png",
-      "images/previews/expressions_3.png",
-      "images/previews/expressions_4.png"
+      "images/角色表情包/1.png",
+      "images/角色表情包/2.png",
+      "images/角色表情包/3.png",
+      "images/角色表情包/4.png"
     ],
     tags: ["角色", "表情", "情绪", "视觉词汇", "PNG", "基础", "入门"],
     file_count: 96,
@@ -114,13 +114,13 @@ const packs = [
     name: "场景背景视觉词汇合集",
     description: "漫画常用场景背景素材合集，包含室内、室外、自然、城市等多种场景类型。统一风格，可直接用于分镜格背景。\n\n### 包含内容\n- 室内场景 8 类（教室/客厅/咖啡厅/办公室等）\n- 室外场景 8 类（街道/公园/校园/车站等）\n- 自然场景 6 类（森林/海边/山景/天空等）\n- 城市场景 6 类（街景/夜景/雨景等）",
     price: 2990,
-    cover_url: "images/covers/scenes.png",
+    cover_url: "images/场景背景合集/cover.png",
     previews: [
-      "images/previews/scenes_1.png",
-      "images/previews/scenes_2.png",
-      "images/previews/scenes_3.png",
-      "images/previews/scenes_4.png",
-      "images/previews/scenes_5.png"
+      "images/场景背景合集/1.png",
+      "images/场景背景合集/2.png",
+      "images/场景背景合集/3.png",
+      "images/场景背景合集/4.png",
+      "images/场景背景合集/5.png"
     ],
     tags: ["场景", "背景", "室内", "室外", "自然", "城市", "视觉词汇", "中级"],
     file_count: 145,
@@ -140,12 +140,12 @@ const packs = [
     name: "特效与速度线素材包",
     description: "漫画特效素材专用包，包含速度线、集中线、效果字、爆炸烟雾等常见漫画效果。快速提升画面冲击力和表现力。\n\n### 包含内容\n- 速度线 20+ 种\n- 集中线/放射线 15 种\n- 效果字模板 30+ 种\n- 爆炸/烟雾/闪光 18 种\n- 网点和纹理 12 种",
     price: 1990,
-    cover_url: "images/covers/sfx-effects.png",
+    cover_url: "images/特效速度线/cover.png",
     previews: [
-      "images/previews/sfx-effects_1.png",
-      "images/previews/sfx-effects_2.png",
-      "images/previews/sfx-effects_3.png",
-      "images/previews/sfx-effects_4.png"
+      "images/特效速度线/1.png",
+      "images/特效速度线/2.png",
+      "images/特效速度线/3.png",
+      "images/特效速度线/4.png"
     ],
     tags: ["特效", "速度线", "集中线", "效果字", "爆炸", "网点", "中级", "表现力"],
     file_count: 88,
@@ -165,12 +165,12 @@ const packs = [
     name: "角色设计参考套件",
     description: "漫画角色设计辅助素材，包含体型参考、服饰设计、发型集锦和角色表情对照表。适合需要快速建立角色形象设定的创作者。\n\n### 包含内容\n- 体型比例参考 12 组\n- 服饰类型设计 20+ 套\n- 发型集锦 30+ 种\n- 角色三视图模板\n- 性格-外观映射参考",
     price: 3990,
-    cover_url: "images/covers/character-kit.png",
+    cover_url: "images/角色设计套件/cover.png",
     previews: [
-      "images/previews/character-kit_1.png",
-      "images/previews/character-kit_2.png",
-      "images/previews/character-kit_3.png",
-      "images/previews/character-kit_4.png"
+      "images/角色设计套件/1.png",
+      "images/角色设计套件/2.png",
+      "images/角色设计套件/3.png",
+      "images/角色设计套件/4.png"
     ],
     tags: ["角色", "设计", "体型", "服饰", "发型", "三视图", "高级", "创作"],
     file_count: 112,
@@ -190,12 +190,12 @@ const packs = [
     name: "分镜模板专业套装",
     description: "专业漫画分镜模板大合集，涵盖少年漫、少女漫、青年漫等多类型的标准分格布局。提供从草稿到成稿的全流程分镜支持。\n\n### 包含内容\n- 少年漫分格模板 25 组\n- 少女漫分格模板 20 组\n- 青年漫分格模板 18 组\n- 四格/八格模板 10 组\n- 跨页大格布局 12 组",
     price: 3990,
-    cover_url: "images/covers/storyboard-pro.png",
+    cover_url: "images/分镜模板套装/cover.png",
     previews: [
-      "images/previews/storyboard-pro_1.png",
-      "images/previews/storyboard-pro_2.png",
-      "images/previews/storyboard-pro_3.png",
-      "images/previews/storyboard-pro_4.png"
+      "images/分镜模板套装/1.png",
+      "images/分镜模板套装/2.png",
+      "images/分镜模板套装/3.png",
+      "images/分镜模板套装/4.png"
     ],
     tags: ["分镜", "模板", "少年漫", "少女漫", "青年漫", "跨页", "高级", "专业"],
     file_count: 95,

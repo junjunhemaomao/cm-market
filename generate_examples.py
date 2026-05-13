@@ -1,20 +1,18 @@
 """Generate example pack images (covers + previews) using Pillow.
 
 Usage:   python generate_examples.py
-Output:  public/images/covers/*.png   (600x400)
-         public/images/previews/*.png (800x600)
+Output:  public/images/<中文包名>/cover.png (600x400)
+         public/images/<中文包名>/1~N.png  (800x600)
 
 Replace these with real screenshots before deployment.
 """
 from PIL import Image, ImageDraw, ImageFont
 import os, math, random
 
-OUT = "public/images"
-COVERS = os.path.join(OUT, "covers")
-PREVIEWS = os.path.join(OUT, "previews")
+OUT = "docs/images"
+# 每个素材包一个中文文件夹，cover.png + 1.png 2.png ...
 
-os.makedirs(COVERS, exist_ok=True)
-os.makedirs(PREVIEWS, exist_ok=True)
+os.makedirs(OUT, exist_ok=True)
 
 W, H = 600, 400
 PW, PH = 800, 600
@@ -85,7 +83,7 @@ def draw_circle_set(draw, cx, cy, color, count=5, r=30):
 # COVERS
 # ============================================================
 
-def make_cover(slug, text, palette_key, extra_draw=None):
+def make_cover(folder, text, palette_key, extra_draw=None):
     bg, accent, _ = PALETTES[palette_key]
     img = Image.new("RGBA", (W, H), bg)
     draw = ImageDraw.Draw(img)
@@ -110,14 +108,16 @@ def make_cover(slug, text, palette_key, extra_draw=None):
     tw = bbox[2] - bbox[0]
     draw.text(((W - tw) / 2, H - 60), text, fill="#ffffff", font=font)
 
-    img.save(os.path.join(COVERS, f"{slug}.png"))
+    dir_path = os.path.join(OUT, folder)
+    os.makedirs(dir_path, exist_ok=True)
+    img.save(os.path.join(dir_path, "cover.png"))
 
 
 # ============================================================
 # PREVIEWS
 # ============================================================
 
-def make_preview(slug, idx, bg_color, accent_color, draw_fn):
+def make_preview(folder, idx, bg_color, accent_color, draw_fn):
     img = Image.new("RGBA", (PW, PH), bg_color)
     draw = ImageDraw.Draw(img)
 
@@ -126,7 +126,9 @@ def make_preview(slug, idx, bg_color, accent_color, draw_fn):
 
     draw_fn(draw)
 
-    img.save(os.path.join(PREVIEWS, f"{slug}_{idx}.png"))
+    dir_path = os.path.join(OUT, folder)
+    os.makedirs(dir_path, exist_ok=True)
+    img.save(os.path.join(dir_path, f"{idx}.png"))
 
 
 # ---- Generate all pack images ----
@@ -134,29 +136,29 @@ def make_preview(slug, idx, bg_color, accent_color, draw_fn):
 font = get_font(28)
 
 # 1. 分镜基础入门（免费）
-slug = "framing-basics"
-make_cover(slug, "分镜基础入门", "framing")
+folder = "分镜基础入门"
+make_cover(folder, "分镜基础入门", "framing")
 for i in range(4):
     def fn(d, i=i):
         draw_grid(d, 80, 60, 3, 2, 200, 200, "#2c7cf0", 2)
         draw_composition_lines(d, PW, PH, "#5b86b5")
         d.text((60, 530), f"构图参考 #{i+1} — 引导线与分格", fill="#94a3b8", font=get_font(18))
-    make_preview(slug, i+1, "#f0f4fa", "#2c7cf0", fn)
+    make_preview(folder, i+1, "#f0f4fa", "#2c7cf0", fn)
 
 # 2. 完整场景分镜结构（轻量版）
-slug = "scene-framing"
-make_cover(slug, "场景分镜结构", "framing")
+folder = "场景分镜结构"
+make_cover(folder, "场景分镜结构", "framing")
 for i in range(5):
     rows = [2, 3, 4, 2, 3][i]
     cols = [3, 2, 3, 4, 2][i]
     def fn(d, rows=rows, cols=cols, i=i):
         draw_grid(d, 60, 50, cols, rows, 160, 140, "#e8882a", 2)
         d.text((60, 530), f"场景分镜 {i+1} — {rows}x{cols} 格布局", fill="#94a3b8", font=get_font(18))
-    make_preview(slug, i+1, "#fdf6f0", "#e8882a", fn)
+    make_preview(folder, i+1, "#fdf6f0", "#e8882a", fn)
 
 # 3. 全维度分镜大数据（专业版）
-slug = "pro-framing"
-make_cover(slug, "专业分镜数据", "framing")
+folder = "专业分镜数据"
+make_cover(folder, "专业分镜数据", "framing")
 for i in range(6):
     def fn(d, i=i):
         # data visualization mock
@@ -166,11 +168,11 @@ for i in range(6):
             d.rectangle([(x, 450-bar_h), (x+40, 450)], fill="#8b1e1e")
         d.text((200, 80), "齐夫分布 · 分格频率模型", fill="#d4a574", font=get_font(30))
         d.text((60, 530), f"数据面板 #{i+1} — 行业级统计分析", fill="#94a3b8", font=get_font(18))
-    make_preview(slug, i+1, "#1a1a2e", "#8b1e1e", fn)
+    make_preview(folder, i+1, "#1a1a2e", "#8b1e1e", fn)
 
 # 4. 角色表情视觉词汇包
-slug = "expressions"
-make_cover(slug, "角色表情包", "character")
+folder = "角色表情包"
+make_cover(folder, "角色表情包", "character")
 for i in range(4):
     emotions = ["喜悦", "愤怒", "悲伤", "惊讶"]
     def fn(d, i=i):
@@ -187,11 +189,11 @@ for i in range(4):
             mx, my = x+45, y+75
             d.arc([mx, my, mx+30, my+20], 0, 180, fill="#c42a6b", width=2)
         d.text((60, 530), f"表情参考 #{i+1} — {emotions[i]}类情绪", fill="#94a3b8", font=get_font(18))
-    make_preview(slug, i+1, "#fdf5f8", "#c42a6b", fn)
+    make_preview(folder, i+1, "#fdf5f8", "#c42a6b", fn)
 
 # 5. 场景背景视觉词汇合集
-slug = "scenes"
-make_cover(slug, "场景背景合集", "scene")
+folder = "场景背景合集"
+make_cover(folder, "场景背景合集", "scene")
 for i in range(5):
     def fn(d, i=i):
         # landscape silhouettes
@@ -206,11 +208,11 @@ for i in range(5):
                 bh = random.randint(30, 100)
                 d.polygon([(bx, hy), (bx+30, hy-bh), (bx+60, hy)], outline="#2d8a56", width=1)
         d.text((60, 530), f"场景参考 #{i+1}", fill="#94a3b8", font=get_font(18))
-    make_preview(slug, i+1, "#f2f8f4", "#2d8a56", fn)
+    make_preview(folder, i+1, "#f2f8f4", "#2d8a56", fn)
 
 # 6. 特效与速度线素材包
-slug = "sfx-effects"
-make_cover(slug, "特效速度线", "effect")
+folder = "特效速度线"
+make_cover(folder, "特效速度线", "effect")
 for i in range(4):
     def fn(d, i=i):
         cx, cy = PW//2, PH//2 - 30
@@ -218,11 +220,11 @@ for i in range(4):
         draw_circle_set(d, cx-150, cy+80, "#c44a10", 4, 25)
         draw_circle_set(d, cx+150, cy+80, "#c44a10", 4, 25)
         d.text((60, 530), f"特效 {i+1} — 速度线/集中线/效果", fill="#94a3b8", font=get_font(18))
-    make_preview(slug, i+1, "#fdf8f2", "#e8882a", fn)
+    make_preview(folder, i+1, "#fdf8f2", "#e8882a", fn)
 
 # 7. 角色设计参考套件
-slug = "character-kit"
-make_cover(slug, "角色设计套件", "character")
+folder = "角色设计套件"
+make_cover(folder, "角色设计套件", "character")
 for i in range(4):
     def fn(d, i=i):
         # figure proportions
@@ -238,11 +240,11 @@ for i in range(4):
             d.line([(bx+50, 250), (bx+85, 330)], fill="#c42a6b", width=2)
             d.text((bx+15, 360), f"体型 {chr(65+j)}", fill="#94a3b8", font=get_font(14))
         d.text((60, 530), f"角色参考 #{i+1} — 体型/服饰/发型", fill="#94a3b8", font=get_font(18))
-    make_preview(slug, i+1, "#fdf5f8", "#c42a6b", fn)
+    make_preview(folder, i+1, "#fdf5f8", "#c42a6b", fn)
 
 # 8. 分镜模板专业套装
-slug = "storyboard-pro"
-make_cover(slug, "分镜模板套装", "framing")
+folder = "分镜模板套装"
+make_cover(folder, "分镜模板套装", "framing")
 for i in range(4):
     layouts = [(2, 3), (3, 2), (2, 2), (1, 3)]
     def fn(d, i=i):
@@ -255,8 +257,6 @@ for i in range(4):
                 cy = 60 + r * 180 + 90
                 d.rectangle([(cx-40, cy-30), (cx+40, cy+30)], outline="#5b86b5", width=1)
         d.text((60, 530), f"分格模板 #{i+1} — {rows}x{cols} 布局", fill="#94a3b8", font=get_font(18))
-    make_preview(slug, i+1, "#f0f4fa", "#1e6b8b", fn)
+    make_preview(folder, i+1, "#f0f4fa", "#1e6b8b", fn)
 
-print("Done! Generated covers and previews in public/images/")
-print(f"  covers:  {len(os.listdir(COVERS))} files")
-print(f"  previews: {len(os.listdir(PREVIEWS))} files")
+print("Done! 素材图片已生成到 docs/images/ 下的各中文文件夹中")
