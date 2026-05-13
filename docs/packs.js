@@ -1,5 +1,5 @@
 // ============================================================
-// ComicMaster Material Market — Pack Data
+// ComicMaster Material Library — Pack Data
 // 图片放在 images/<素材包中文名>/ 下
 // ============================================================
 
